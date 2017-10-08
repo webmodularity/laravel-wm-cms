@@ -1,9 +1,17 @@
 {
-    "name": "laravel/laravel",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
-    "license": "MIT",
-    "type": "project",
+    "name": "webmod/laravel-wm-cms",
+    "description": "WebModularity CMS.",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Rory Hellyer",
+            "email": "rory@webmodularity.com"
+        }
+    ],
+    "repositories": [
+        {"type": "composer", "url": "https://toran.webmodularity.com/repo/private/"}
+    ],
+    "minimum-stability": "dev",
     "require": {
         "php": ">=7.0.0",
         "fideloper/proxy": "~3.3",
