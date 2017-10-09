@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Log;
+use App\Hosting\MailAlias;
 
 class EmailSyncAliasMap extends Command
 {
@@ -37,6 +39,11 @@ class EmailSyncAliasMap extends Command
      */
     public function handle()
     {
-        //
+        Log::info('STARTING SYNC >>>>>>>>>>');
+        $aliases = MailAlias::with(['destination', 'tld'])->get();
+        foreach ($aliases as $alias) {
+            echo $alias->user . '@' . $alias->tld->name . " -> " . $alias->destination->destination . "\n";
+        }
+        Log::info('ENDING SYNC >>>>>>>>>>');
     }
 }
