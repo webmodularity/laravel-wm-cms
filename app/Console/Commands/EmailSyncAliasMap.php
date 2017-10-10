@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Log;
 use App\Hosting\MailAlias;
+use Storage;
 
 class EmailSyncAliasMap extends Command
 {
@@ -39,11 +40,21 @@ class EmailSyncAliasMap extends Command
      */
     public function handle()
     {
-        Log::info('STARTING SYNC >>>>>>>>>>');
+        $putAlias = Storage::disk('s3')->put('_alias_map.json', json_encode($this->getAliasMap()));
+    }
+
+    protected function getAliasMap()
+    {
         $aliases = MailAlias::with(['destination', 'tld'])->get();
+        $aliasMap = [];
         foreach ($aliases as $alias) {
-            echo $alias->user . '@' . $alias->tld->name . " -> " . $alias->destination->destination . "\n";
+            $fullEmail = $alias->user . '@' . $alias->tld->name;
+            if (array_key_exists($fullEmail, $aliasMap)) {
+                array_push($aliasMap[$fullEmail], $alias->destination->destination);
+            } else {
+                $aliasMap[$fullEmail] = [$alias->destination->destination];
+            }
         }
-        Log::info('ENDING SYNC >>>>>>>>>>');
+        return $aliasMap;
     }
 }
